@@ -1,12 +1,14 @@
-import { StatusBar } from "expo-status-bar";
 import React, { useEffect, useState } from "react";
+import { StatusBar } from "expo-status-bar";
 import { StyleSheet, Text, View, Button, Switch } from "react-native";
+import * as ScreenOrientation from "expo-screen-orientation";
 import initialData from "./data/initialData";
 
 export default function App() {
   const [phrase, setPhrase] = useState({});
   const [showTranslation, setShowTranslation] = useState(false);
   const [firstLanguage, setFirstLanguage] = useState("eng");
+  const [orientationIsLandscape, setOrientation] = useState(true);
 
   const randomInteger = (min, max) => {
     let rand = min + Math.random() * (max + 1 - min);
@@ -32,6 +34,20 @@ export default function App() {
     if (currentIndex === newIndex && currentIndex < lastIndex) {
       setPhrase(initialData[newIndex + 1]);
     }
+  };
+
+  async function changeScreenOrientation() {
+    if (orientationIsLandscape == true) {
+      ScreenOrientation.lockAsync(
+        ScreenOrientation.OrientationLock.LANDSCAPE_LEFT
+      );
+    } else if (orientationIsLandscape == false) {
+      ScreenOrientation.lockAsync(ScreenOrientation.OrientationLock.PORTRAIT);
+    }
+  }
+  const toggleOrientation = () => {
+    setOrientation(!orientationIsLandscape);
+    changeScreenOrientation();
   };
 
   return (
